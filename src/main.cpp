@@ -29,7 +29,9 @@ int main() {
     // std::string model_name = "monkeyhead";
     // std::string model_name = "octopus";
     // std::string model_name = "seahorse";
-    std::string model_name = "shark";
+    // std::string model_name = "shark";
+    // std::string model_name = "shark_scale";
+    std::string model_name = "data";
 
     MatrixXd cage_vs;
     MatrixXi cage_fs;
