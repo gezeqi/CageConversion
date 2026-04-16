@@ -35,7 +35,7 @@ int main() {
 
     MatrixXd cage_vs;
     MatrixXi cage_fs;
-    igl::readOBJ("../models/" + model_name + "/cage.obj", cage_vs, cage_fs);
+    igl::readOBJ("./models/" + model_name + "/cage.obj", cage_vs, cage_fs);
 
     // For collecting original vertices.
     std::vector<std::vector<VectorXd> > all_cage_fvs;
@@ -50,9 +50,9 @@ int main() {
         RowVectorXd p030 = cage_vs.row(cur_fv_ids(1));
         RowVectorXd p300 = cage_vs.row(cur_fv_ids(2));
 
-        for (int i = 0; i < 4; ++i) {
+        for (int i = 3; i >= 0; --i) {
             for (int j = 0; j < 4 - i; ++j) {
-                RowVectorXd cur_p = (i * p300 + j * p030 + (3 - i - j) * p003) / 3;
+                RowVectorXd cur_p = (i * p003 + j * p300 + (3 - i - j) * p030) / 3;
                 // For collecting original vertices.
                 cur_face_vs.emplace_back(cur_p);
 
@@ -112,7 +112,7 @@ int main() {
     // Read original vertices
     MatrixXd vs_origin;
     MatrixXi fs_origin;
-    igl::readOBJ("../models/" + model_name + "/control_points.obj", vs_origin, fs_origin);
+    igl::readOBJ("./models/" + model_name + "/control_points.obj", vs_origin, fs_origin);
 
     std::vector<VectorXd> origin_vs;
     for (int c_id = 0; c_id < vs_origin.rows(); ++c_id) {
@@ -151,7 +151,7 @@ int main() {
     // Read deformed vertices
     MatrixXd vs_deformed;
     MatrixXi fs_deformed;
-    igl::readOBJ("../models/" + model_name + "/deformed_control_points.obj", vs_deformed, fs_deformed);
+    igl::readOBJ("./models/" + model_name + "/deformed_control_points.obj", vs_deformed, fs_deformed);
 
 
     std::vector<VectorXd> deformed_vs;
