@@ -21,21 +21,11 @@ struct PointEqual {
     }
 };
 
-int main() {
-    // std::string model_name = "beast";
-    // std::string model_name = "bench";
-    // std::string model_name = "elephant";
-    // std::string model_name = "giraffe";
-    // std::string model_name = "monkeyhead";
-    // std::string model_name = "octopus";
-    // std::string model_name = "seahorse";
-    // std::string model_name = "shark";
-    // std::string model_name = "shark_scale";
-    std::string model_name = "data";
 
-    MatrixXd cage_vs;
+void conversion(const std::string& model_name) {
+        MatrixXd cage_vs;
     MatrixXi cage_fs;
-    igl::readOBJ("./models/" + model_name + "/cage.obj", cage_vs, cage_fs);
+    igl::readOBJ(model_name + "/cage.obj", cage_vs, cage_fs);
 
     // For collecting original vertices.
     std::vector<std::vector<VectorXd> > all_cage_fvs;
@@ -67,7 +57,7 @@ int main() {
     }
 
     /* ===================== Collect original vertices ===================== */
-    std::ofstream file_origin("cps-origin.txt");
+    std::ofstream file_origin(model_name + "/cps-origin.txt");
     file_origin << std::fixed << std::setprecision(10);
     for (std::vector<VectorXd> &cur_fvs: all_cage_fvs) {
         for (VectorXd &cur_fv: cur_fvs) {
@@ -112,7 +102,7 @@ int main() {
     // Read original vertices
     MatrixXd vs_origin;
     MatrixXi fs_origin;
-    igl::readOBJ("./models/" + model_name + "/control_points.obj", vs_origin, fs_origin);
+    igl::readOBJ(model_name + "/control_points.obj", vs_origin, fs_origin);
 
     std::vector<VectorXd> origin_vs;
     for (int c_id = 0; c_id < vs_origin.rows(); ++c_id) {
@@ -151,7 +141,7 @@ int main() {
     // Read deformed vertices
     MatrixXd vs_deformed;
     MatrixXi fs_deformed;
-    igl::readOBJ("./models/" + model_name + "/deformed_control_points.obj", vs_deformed, fs_deformed);
+    igl::readOBJ(model_name + "/deformed_control_points.obj", vs_deformed, fs_deformed);
 
 
     std::vector<VectorXd> deformed_vs;
@@ -164,7 +154,7 @@ int main() {
         all_cage_vs[i] = deformed_vs[unique_to_origin[all_to_unique_map[i]]];
     }
 
-    std::ofstream file_deformed("cps-deformed.txt");
+    std::ofstream file_deformed(model_name + "/cps-deformed.txt");
     file_deformed << std::fixed << std::setprecision(10);
     int count = -1;
     for (VectorXd &vvv: all_cage_vs) {
@@ -176,6 +166,19 @@ int main() {
         file_deformed << vvv.transpose() << " ";
     }
     file_deformed.close();
+}
+
+int main(const int argc, char* argv[]) {
+    std::string model_name = "demo";
+
+    if (argc == 1) {
+        conversion(model_name);
+        return EXIT_SUCCESS;
+    }
+
+    for (int i = 1; i < argc; ++i) {
+        conversion(argv[i]);
+    }
 
     return EXIT_SUCCESS;
 }
